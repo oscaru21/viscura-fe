@@ -1,0 +1,19 @@
+<div class="flex flex-col items-center px-8 max-w-6xl mx-auto">
+    <div class="flex flex-row bg-background w-full my-4 gap-4">
+        <hlm-cmd-input-wrapper class="rounded-md flex-1 border-solid border">
+          <hlm-icon name="lucideSearch" />
+          <input class="w-full border-none" placeholder="Search..." hlmInput [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"/>
+        </hlm-cmd-input-wrapper>
+        <button hlmBtn [brnMenuTriggerFor]="menu">Add</button>
+      </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+        @for(photo of filteredPhotos(); track photo.id) {
+          <app-photo [photo]="photo"></app-photo>
+        } @empty {
+          <p>No photos found</p>
+        }
+    </div>
+</div>
+
+<ng-template #menu>
+</ng-template>
