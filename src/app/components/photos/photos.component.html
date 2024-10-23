@@ -7,7 +7,7 @@
         <button hlmBtn [brnMenuTriggerFor]="menu">Add</button>
       </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-        @for(photo of filteredPhotos(); track photo.id) {
+        @for(photo of filteredPhotos$ | async; track photo.id) {
           <app-photo [photo]="photo"></app-photo>
         } @empty {
           <p>No photos found</p>

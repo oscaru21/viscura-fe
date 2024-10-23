@@ -1,4 +1,4 @@
-import { Component, computed, Signal, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal } from '@angular/core';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { lucideSearch } from '@ng-icons/lucide';
 import { HlmCommandInputWrapperComponent } from '@spartan-ng/ui-command-helm';
@@ -8,14 +8,18 @@ import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { provideIcons } from '@ng-icons/core';
 import { Photo } from '../../models/photo.model';
 import { PhotoComponent } from '../photo/photo.component';
-import { photos } from '../../models/mocks';
 import { FormsModule } from '@angular/forms';
+import { PhotosService } from '../../services/photos.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { switchMap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-photos',
   standalone: true,
   imports: [
     FormsModule,
+    CommonModule,
     HlmIconComponent,
     HlmCommandInputWrapperComponent,
     HlmInputDirective,
@@ -29,11 +33,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './photos.component.scss'
 })
 export class PhotosComponent {
-  photos = signal<Photo[]>([...photos,...photos,...photos,...photos]);
+  photosService = inject(PhotosService);
 
   searchQuery = signal<string>('');
-  filteredPhotos = computed(() => {
-    const query = this.searchQuery();
-    return this.photos().filter(photo => photo.name.toLowerCase().includes(query.toLowerCase()));
-  });
+  searchQuery$ = toObservable(this.searchQuery);
+  filteredPhotos$ = this.searchQuery$.pipe(
+    switchMap(query => this.photosService.getPhotos(query))
+  );
 }
