@@ -5,6 +5,6 @@
       <p hlmCardDescription>{{photo.resolution}}</p>
     </div>
     <div [hlmAspectRatio]="16 / 9">
-        <img class="object-cover rounded-md" alt="" [src]="photo.url" />
+        <img class="object-cover rounded-md" alt="" [lazyLoad]="photo.url" />
     </div>
 </section>

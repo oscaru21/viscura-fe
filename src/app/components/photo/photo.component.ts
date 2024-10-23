@@ -7,6 +7,7 @@ import {
   HlmCardHeaderDirective,
   HlmCardTitleDirective,
 } from '@spartan-ng/ui-card-helm';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { Photo } from '../../models/photo.model';
 
@@ -21,6 +22,7 @@ const defaultPhoto: Photo = {
   selector: 'app-photo',
   standalone: true,
   imports: [
+    LazyLoadImageModule,
     HlmAspectRatioDirective,
     HlmCardDirective,
     HlmCardHeaderDirective,
