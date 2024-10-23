@@ -1,13 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import {
 	HlmMenuBarComponent,
-	HlmMenuBarItemDirective,
-	HlmMenuComponent,
-	HlmMenuGroupComponent,
-	HlmMenuItemDirective,
+	HlmMenuBarItemDirective
 } from '@spartan-ng/ui-menu-helm';
 
 @Component({
@@ -17,13 +12,8 @@ import {
 		class: 'block',
 	},
 	imports: [
-		BrnMenuTriggerDirective,
-		HlmMenuComponent,
 		HlmMenuBarComponent,
-		HlmMenuItemDirective,
-		HlmMenuBarItemDirective,
-		HlmMenuGroupComponent,
-		HlmButtonDirective
+		HlmMenuBarItemDirective
 	],
 	templateUrl: './top-menu.component.html',
 })

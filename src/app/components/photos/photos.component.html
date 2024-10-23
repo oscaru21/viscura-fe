@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center px-8 max-w-6xl mx-auto">
     <div class="flex flex-row bg-background w-full my-4 gap-4">
-        <hlm-cmd-input-wrapper class="rounded-md flex-1 border-solid border">
+        <hlm-cmd-input-wrapper class="rounded-md flex-1 border-solid border text-foreground">
           <hlm-icon name="lucideSearch" />
           <input class="w-full border-none" placeholder="Search..." hlmInput [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"/>
         </hlm-cmd-input-wrapper>

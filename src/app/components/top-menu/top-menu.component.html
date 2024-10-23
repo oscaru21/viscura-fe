@@ -1,35 +1,5 @@
-<hlm-menu-bar class="w-fill border-0">
-    <button hlmMenuBarItem [brnMenuTriggerFor]="events" class="px-3 font-bold">Events</button>
+<hlm-menu-bar class="w-fill border-0 text-foreground">
+    <button hlmMenuBarItem class="px-3 font-bold">Events</button>
     <button hlmMenuBarItem class="px-3 font-medium" (click)="redirectToPhotos()">Photos</button>
-    <button hlmMenuBarItem [brnMenuTriggerFor]="posts" class="px-3 font-medium">Posts</button>
+    <button hlmMenuBarItem class="px-3 font-medium">Posts</button>
 </hlm-menu-bar>
-
-<ng-template #events>
-    <hlm-menu variant="menubar" class="w-48">
-        <hlm-menu-group>
-            <button hlmMenuItem>
-                About Events
-            </button>
-        </hlm-menu-group>
-    </hlm-menu>
-</ng-template>
-
-<ng-template #photos>
-    <hlm-menu variant="menubar" class="w-48">
-        <hlm-menu-group>
-            <button hlmMenuItem>
-                About Photos
-            </button>
-        </hlm-menu-group>
-    </hlm-menu>
-</ng-template>
-
-<ng-template #posts>
-    <hlm-menu variant="menubar" class="w-48">
-        <hlm-menu-group>
-            <button hlmMenuItem>
-                About Posts
-            </button>
-        </hlm-menu-group>
-    </hlm-menu>
-</ng-template>
