@@ -10,6 +10,7 @@ import {
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { Photo } from '../../models/photo.model';
+import { StatusComponent } from '../status/status.component';
 
 const defaultPhoto: Photo = {
   id: 0,
@@ -28,7 +29,9 @@ const defaultPhoto: Photo = {
     HlmCardHeaderDirective,
     HlmCardContentDirective,
     HlmCardTitleDirective,
-    HlmCardDescriptionDirective
+    HlmCardDescriptionDirective,
+
+    StatusComponent
   ],
   templateUrl: './photo.component.html',
   styleUrl: './photo.component.scss'

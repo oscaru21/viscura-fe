@@ -1,7 +1,10 @@
 
 <section hlmCard class="p-4 h-full flex flex-col justify-between hover:scale-105">
     <div class="flex flex-col mb-4 gap-2">
-      <h3 hlmCardTitle>{{photo.name}}</h3>
+      <div class="flex flex-row justify-between items-center">
+        <h3 hlmCardTitle>{{photo.name}}</h3>
+        <app-status class="rounded-full"></app-status>
+      </div>
       <p hlmCardDescription>{{photo.resolution}}</p>
     </div>
     <div [hlmAspectRatio]="16 / 9">
