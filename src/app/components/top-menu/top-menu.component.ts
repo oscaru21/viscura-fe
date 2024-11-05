@@ -23,4 +23,8 @@ export class TopMenuComponent {
   redirectToPhotos() {
     this.router.navigate(['/photos']);
   }
+
+  redirectToEvents() {
+	this.router.navigate(['/events']);
+  }
 }

@@ -11,8 +11,9 @@ import { PhotoComponent } from '../photo/photo.component';
 import { FormsModule } from '@angular/forms';
 import { PhotosService } from '../../services/photos.service';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, map, mergeAll, switchMap, tap, toArray } from 'rxjs';
+import { filter, map, mergeAll, of, switchMap, tap, toArray } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { photos } from '../../models/mocks';
 
 @Component({
   selector: 'app-photos',
@@ -37,8 +38,9 @@ export class PhotosComponent {
 
   searchQuery = signal<string>('');
   searchQuery$ = toObservable(this.searchQuery);
-  filteredPhotos$ = this.searchQuery$.pipe(
-    switchMap(query => this.photosService.getPhotos(query)),
-    map(photos => photos.slice(0, 10))
-  );
+  filteredPhotos$ = of([...photos, ...photos, ...photos, ...photos, ...photos, ...photos, ...photos, ...photos, ...photos, ...photos]);
+  // filteredPhotos$ = this.searchQuery$.pipe(
+  //   switchMap(query => this.photosService.getPhotos(query)),
+  //   map(photos => photos.slice(0, 10))
+  // );
 }
