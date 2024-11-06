@@ -4,10 +4,29 @@
           <hlm-icon name="lucideSearch" />
           <input class="w-full border-none" placeholder="Search..." hlmInput [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"/>
         </hlm-cmd-input-wrapper>
-        <button hlmBtn [brnMenuTriggerFor]="menu">Add</button>
+        
+        <hlm-dialog>
+          <button brnDialogTrigger hlmBtn [brnMenuTriggerFor]="menu">Add</button>
+          <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+              <hlm-dialog-header>
+                  <h3 hlmDialogTitle>Add photos</h3>
+              </hlm-dialog-header>
+              <div class="py-4 grid gap-4">
+                  <form>
+                      <div class="items-center grid grid-cols-4 gap-4">
+                        <label hlmLabel for="image" class="text-right">Photos</label>
+                        <input hlmInput id="image" type="file" class="col-span-3" (change)="onFileSelect($event)" multiple/>
+                      </div>
+                  </form>
+              </div>
+              <hlm-dialog-footer>
+                <button hlmBtn type="submit" [disabled]="!selectedPhotos.length" (click)="onUpload(ctx)">Upload</button>
+              </hlm-dialog-footer>
+            </hlm-dialog-content>
+      </hlm-dialog>
       </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-        @for(photo of filteredPhotos$ | async; track photo.id) {
+        @for(photo of eventPhotos$ | async; track photo.id) {
           <app-photo [photo]="photo"></app-photo>
         } @empty {
           <p>No photos found</p>

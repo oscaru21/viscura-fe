@@ -11,28 +11,28 @@
         <hlm-dialog>
             <button brnDialogTrigger hlmCard class="p-4 w-full h-full flex flex-col justify-between items-center text-center hover:scale-105">
                 <div class="flex flex-col mb-4 gap-2">
-                <hlm-icon size='lg' name="lucidePlus" class="w-full" />
-                <p hlmCardDescription class="w-full">Add new event</p>
+                    <hlm-icon size='lg' name="lucidePlus" class="w-full" />
+                    <p hlmCardDescription class="w-full">Add new event</p>
                 </div>
             </button>
             <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
                 <hlm-dialog-header>
-                  <h3 hlmDialogTitle>Add new event</h3>
+                    <h3 hlmDialogTitle>Add new event</h3>
                 </hlm-dialog-header>
                 <div class="py-4 grid gap-4">
                     <form [formGroup]="form">
                         <div class="items-center grid grid-cols-4 gap-4">
                             <label hlmLabel for="title" class="text-right">Title</label>
                             <input hlmInput id="title" formControlName="title" class="col-span-3" />
-                          </div>
-                          <div class="items-center grid grid-cols-4 gap-4">
+                        </div>
+                        <div class="items-center grid grid-cols-4 gap-4">
                             <label hlmLabel for="description" class="text-right">Description</label>
                             <textarea hlmInput id="description" formControlName="description" class="col-span-3" rows="5"></textarea>
                           </div>
                     </form>
                 </div>
                 <hlm-dialog-footer>
-                  <button hlmBtn type="submit" (click)="createEvent()">Add</button>
+                  <button hlmBtn type="submit" (click)="createEvent(ctx)">Add</button>
                 </hlm-dialog-footer>
               </hlm-dialog-content>
         </hlm-dialog>

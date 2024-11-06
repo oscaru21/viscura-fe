@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { Photo } from '../models/photo.model';
-import { map, mergeAll, Observable, toArray } from 'rxjs';
+import { catchError, map, mergeAll, Observable, toArray } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +9,15 @@ import { map, mergeAll, Observable, toArray } from 'rxjs';
 export class PhotosService {
   http = inject(HttpClient);
 
-  constructor() { }
+  organizationId: number = 1;
+  baseUrl: string = 'http://localhost:8000';
+  photos = signal([]);
 
-  getPhotos(searchQuery: string = ''): Observable<Photo[]> {
-    return this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').pipe(
-      mergeAll(),
-      map(photo => ({
-        id: photo.id,
-        name: photo.title,
-        url: photo.thumbnailUrl,
-        resolution: '100x100'
-      } as Photo)),
-      toArray()
-    );
+  getPhotos(eventId: number) {
+    return this.http.get(`${this.baseUrl}/events/${eventId}/photos`) as Observable<Photo[]>;
+  }
+
+  uploadPhotos(eventId: number, files: FormData) {
+    return this.http.post(`${this.baseUrl}/events/${eventId}/photos`, files);
   }
 }

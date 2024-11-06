@@ -7,13 +7,13 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { lucidePlus } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmCardContentDirective, HlmCardDescriptionDirective, HlmCardDirective, HlmCardHeaderDirective, HlmCardTitleDirective } from '@spartan-ng/ui-card-helm';
-import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
+import { BrnDialogContentDirective, BrnDialogState, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-events',
@@ -41,7 +41,7 @@ import { Router } from '@angular/router';
     HlmButtonDirective,
 
     ReactiveFormsModule
-  ],
+    ],
   providers: [provideIcons({ lucidePlus })],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
@@ -59,10 +59,11 @@ export class EventsComponent {
     });
   }
 
-  createEvent() {
+  createEvent(ctx: any) {
     const event = this.form.value;
     this.eventsService.createEvent(event).subscribe((event: any) => {
       this.events.set([...this.events(), event]);
+      ctx.close();
     });
   }
 
