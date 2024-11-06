@@ -73,7 +73,7 @@ export class PhotosService {
       this.filteredPhotosSubject$.next(this.photos().map((photo) => photo.id));
       return of([]);
     }
-    return this.http.get(`${this.baseUrl}/events/${eventId}/photos/search/`, { params: { text: query, num_results: 3 } }).pipe(
+    return this.http.get(`${this.baseUrl}/events/${eventId}/photos/search/`, { params: { text: query, threshold: 0.26 } }).pipe(
       first() as any,
       tap((ids) => this.filteredPhotosSubject$.next(ids))
     ) as Observable<number[]>;
