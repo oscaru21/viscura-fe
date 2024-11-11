@@ -1,0 +1,12 @@
+<section class="w-full p-2 rounded-md flex flex-row justify-between items-center bg-secondary">
+    <div id="left-container" class="flex flex-rwo gap-2 items-center">
+        <button hlmBtn variant='ghost' (click)="stopSelecting()">
+            <hlm-icon size="2em" name="lucideX" />
+        </button>
+        <h3 class="text-sm md:text-lg">{{ photosService.selectedPhotos().length }} {{ photosService.selectedPhotos().length > 1 ? 'Photos' : 'Photo'}} selected</h3>
+    </div>
+    <div id="right-container" class="flex flex-rwo gap-2">
+        <button hlmBtn (click)="createNewPost()">Create Post</button>
+        <button hlmBtn variant='destructive' (click)="deleteSelectedPhotos()">Delete</button>
+    </div>
+</section>

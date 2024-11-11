@@ -25,7 +25,12 @@
             </hlm-dialog-content>
       </hlm-dialog>
       </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+    @if(isSelecting()) {
+      <div class="py-4 bg-background w-full sticky top-0 z-50">
+        <app-photos-actions class="w-full"/>
+      </div>
+    }
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full z-40">
         @for(photo of eventPhotos(); track photo.id) {
           <app-photo [photo]="photo"></app-photo>
         } @empty {

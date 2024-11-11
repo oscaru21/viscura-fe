@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { EventsService } from '../../services/events/events.service';
 import { CommonModule } from '@angular/common';
 import { Event } from '../../models/event.model';
@@ -14,6 +14,7 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-events',
@@ -47,12 +48,14 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './events.component.scss'
 })
 export class EventsComponent {
-  events = signal<Event[]>([])
+  router = inject(Router);
+  eventsService = inject(EventsService);
+  events = this.eventsService.events;
 
   form: FormGroup;
 
-  constructor(private eventsService: EventsService, private router: Router) {
-    this.events = this.eventsService.events;
+  constructor() {
+    this.eventsService.getEvents().pipe(first()).subscribe();
     this.form = new FormGroup({
       title: new FormControl(''),
       description: new FormControl(''),
@@ -62,7 +65,6 @@ export class EventsComponent {
   createEvent(ctx: any) {
     const event = this.form.value;
     this.eventsService.createEvent(event).subscribe((event: any) => {
-      this.events.set([...this.events(), event]);
       ctx.close();
     });
   }

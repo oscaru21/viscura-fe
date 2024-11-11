@@ -2,12 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Photo } from '../models/photo.model';
 import { Observable, of, Subject, tap } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EventsService } from './events/events.service';
 
 export interface PhotosState {
   photos: Photo[];
   filteredPhotos: Photo[];
+  selectedPhotos: Photo[];
   loaded: boolean;
+  isSelecting: boolean;
   error: string | null;
 }
 
@@ -16,11 +20,14 @@ export interface PhotosState {
 })
 export class PhotosService {
   http = inject(HttpClient);
+  eventsService = inject(EventsService);
 
   // state
   state = signal<PhotosState>({
     photos: [],
     filteredPhotos: [],
+    selectedPhotos: [],
+    isSelecting: false,
     loaded: false,
     error: null
   });
@@ -30,14 +37,20 @@ export class PhotosService {
   filteredPhotos = computed(() => this.state().filteredPhotos);
   loaded = computed(() => this.state().loaded);
   error = computed(() => this.state().error);
+  isSelecting = computed(() => this.state().isSelecting);
+  selectedPhotos = computed(() => this.state().selectedPhotos);
 
   // sources
   private photosLoadedSubject$ = new Subject<Photo[]>();
   private filteredPhotosSubject$ = new Subject<number[]>();
+  delete$ = new Subject<Photo['id'][]>();
+  select$ = new Subject<number>();
+  unselect$ = new Subject<number>();
+  stopSelecting$ = new Subject<boolean>();
 
   constructor() {
     // reducers
-    this.photosLoadedSubject$.subscribe({
+    this.photosLoadedSubject$.pipe(takeUntilDestroyed()).subscribe({
       next: (photos) => this.state.update((state) => ({
         ...state,
         photos,
@@ -45,11 +58,42 @@ export class PhotosService {
         loaded: true
       }))
     });
-    this.filteredPhotosSubject$.subscribe({
+    this.filteredPhotosSubject$.pipe(takeUntilDestroyed()).subscribe({
       next: (filteredPhotosIds) => this.state.update((state) => ({
         ...state,
         filteredPhotos: state.photos.filter((photo) => filteredPhotosIds.includes(photo.id))
       }))
+    });
+    this.delete$.pipe(
+      takeUntilDestroyed(),
+      switchMap((photoIds) => this.http.delete<Photo['id'][]>(`${this.baseUrl}/events/${this.eventsService.currentEvent()}/photos`, { body: photoIds }))
+    ).subscribe((photoIds) => {
+      this.state.update((state) => ({
+        ...state,
+        photos: state.photos.filter((photo) => !photoIds.includes(photo.id)),
+        filteredPhotos: state.filteredPhotos.filter((photo) => !photoIds.includes(photo.id)),
+        selectedPhotos: state.selectedPhotos.filter((photo) => !photoIds.includes(photo.id))
+      }));
+    });
+    this.select$.pipe(takeUntilDestroyed()).subscribe((photoId) => {
+      this.state.update((state) => ({
+        ...state,
+        isSelecting: true,
+        selectedPhotos: [...state.selectedPhotos, state.photos.find((photo) => photo.id === photoId)!]
+      }));
+    });
+    this.unselect$.pipe(takeUntilDestroyed()).subscribe((photoId) => {
+      this.state.update((state) => ({
+        ...state,
+        selectedPhotos: state.selectedPhotos.filter((photo) => photo.id !== photoId)
+      }));
+    });
+    this.stopSelecting$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.state.update((state) => ({
+        ...state,
+        isSelecting: false,
+        selectedPhotos: []
+      }));
     });
   }
 
@@ -78,4 +122,5 @@ export class PhotosService {
       tap((ids) => this.filteredPhotosSubject$.next(ids))
     ) as Observable<number[]>;
   }
+
 }

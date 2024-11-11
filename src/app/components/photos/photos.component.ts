@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { lucideSearch } from '@ng-icons/lucide';
 import { HlmCommandInputWrapperComponent } from '@spartan-ng/ui-command-helm';
@@ -6,18 +6,17 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { provideIcons } from '@ng-icons/core';
-import { Photo } from '../../models/photo.model';
 import { PhotoComponent } from '../photo/photo.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PhotosService } from '../../services/photos.service';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { debounce, debounceTime, filter, first, map, mergeAll, Observable, of, switchMap, take, tap, toArray } from 'rxjs';
+import { debounceTime, first } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { photos } from '../../models/mocks';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { ActivatedRoute } from '@angular/router';
+import { EventsService } from '../../services/events/events.service';
+import { PhotosActionsComponent } from '../photos-actions/photos-actions.component';
 
 @Component({
   selector: 'app-photos',
@@ -43,6 +42,7 @@ import { ActivatedRoute } from '@angular/router';
     HlmDialogTitleDirective,
 
     PhotoComponent,
+    PhotosActionsComponent,
 
     ReactiveFormsModule
   ],
@@ -52,7 +52,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PhotosComponent implements OnInit {
   photosService = inject(PhotosService);
+  eventsService = inject(EventsService);
   activeRoute = inject(ActivatedRoute);
+
+  isSelecting = this.photosService.isSelecting;
 
   selectedPhotos: File[] = [];
   eventId = Number(this.activeRoute.snapshot.paramMap.get('eventId'));
@@ -65,6 +68,7 @@ export class PhotosComponent implements OnInit {
 
 
   ngOnInit() {
+    this.eventsService.changeEvent$.next(this.activeRoute.snapshot.paramMap.get('eventId')!);
     this.photosService.getPhotos(this.eventId).pipe(first()).subscribe();
     this.searchForm.get('search')?.valueChanges.pipe(
       debounceTime(300),

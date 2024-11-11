@@ -1,8 +1,26 @@
 
-<section hlmCard class="p-4 h-full flex flex-col justify-between hover:scale-105">
+<section 
+  hlmCard 
+  class="p-4 h-full flex flex-col justify-between hover:scale-105"
+  [class.overlay]="isSelected()"
+  [brnCtxMenuTriggerFor]="menu"
+  (click)="onClick()"
+  (mouseenter)="isHovered = true" 
+  (mouseleave)="isHovered = false"
+  >
     <div class="flex flex-col mb-4 gap-2">
       <div class="flex flex-row justify-between items-center">
-        <h3 hlmCardTitle>{{photo.name}}</h3>
+        <div class="w-full flex flex-row justify-between items-center">
+          <h3 hlmCardTitle>{{photo.name}}</h3>
+          @if(isSelecting() || isHovered){
+            <div 
+              [class]="{selected: isSelected(), unselected: !isSelected()}" 
+              class="w-6 h-6 flex items-center justify-center rounded-full cursor-pointer"
+              (click)="onSelect(); $event.stopPropagation()">
+              <hlm-icon size="1em" name="lucideCheck" />
+            </div>
+          }
+        </div>
         <app-status class="rounded-full"></app-status>
       </div>
       <p hlmCardDescription>{{photo.resolution}}</p>
@@ -11,3 +29,11 @@
         <img class="object-cover rounded-md" alt="" [lazyLoad]="photo.url" />
     </div>
 </section>
+
+<ng-template #menu>
+  <hlm-menu class="w-64">
+      <button inset hlmMenuItem (click)="deletePhoto()">
+        Delete
+      </button>
+  </hlm-menu>
+</ng-template>

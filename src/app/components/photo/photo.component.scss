@@ -1,0 +1,16 @@
+:host {
+   position: relative;
+   .unselected {
+      color: #d1d5db; /* Equivalent to text-gray-300 */
+      border: 1px solid #d1d5db; /* Equivalent to border-gray-300 */
+   }
+
+   .selected {
+      color: #ffffff; 
+      background-color: #1877F2;
+   }
+
+   .overlay {
+      border: 1px solid #1877F2;
+   }
+}
