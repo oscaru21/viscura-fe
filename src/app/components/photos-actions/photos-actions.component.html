@@ -6,7 +6,23 @@
         <h3 class="text-sm md:text-lg">{{ photosService.selectedPhotos().length }} {{ photosService.selectedPhotos().length > 1 ? 'Photos' : 'Photo'}} selected</h3>
     </div>
     <div id="right-container" class="flex flex-rwo gap-2">
-        <button hlmBtn (click)="createNewPost()">Create Post</button>
-        <button hlmBtn variant='destructive' (click)="deleteSelectedPhotos()">Delete</button>
+        
+        <hlm-alert-dialog>
+            <button brnAlertDialogTrigger hlmBtn variant='destructive'>Delete</button>
+            <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+              <hlm-alert-dialog-header>
+                <h3 hlmAlertDialogTitle>Are you absolutely sure?</h3>
+                <p hlmAlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the selected photos and remove all related data from our
+                  servers.
+                </p>
+              </hlm-alert-dialog-header>
+              <hlm-alert-dialog-footer>
+                <button hlmAlertDialogCancel (click)="ctx.close()">Cancel</button>
+                <button hlmBtn variant='destructive' (click)="deleteSelectedPhotos(); ctx.close()">Delete</button>
+              </hlm-alert-dialog-footer>
+            </hlm-alert-dialog-content>
+          </hlm-alert-dialog>
+          <button hlmBtn (click)="createNewPost()">Create Post</button>
     </div>
 </section>
