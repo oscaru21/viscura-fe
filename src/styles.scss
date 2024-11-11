@@ -58,3 +58,10 @@ color-scheme: light;
 --ring: 240 4.9% 83.9%;
 color-scheme: dark;
 }
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

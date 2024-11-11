@@ -1,5 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { provideIcons } from '@ng-icons/core';
+import { lucideHardDrive } from '@ng-icons/lucide';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import {
 	HlmMenuBarComponent,
 	HlmMenuBarItemDirective
@@ -13,8 +16,10 @@ import {
 	},
 	imports: [
 		HlmMenuBarComponent,
-		HlmMenuBarItemDirective
+		HlmMenuBarItemDirective,
+		HlmIconComponent
 	],
+	providers: [provideIcons({ lucideHardDrive })],
 	templateUrl: './top-menu.component.html',
 })
 export class TopMenuComponent {
@@ -26,5 +31,9 @@ export class TopMenuComponent {
 
   redirectToEvents() {
 	this.router.navigate(['/events']);
+  }
+
+  redirectToHome() {
+	this.router.navigate(['/']);
   }
 }
