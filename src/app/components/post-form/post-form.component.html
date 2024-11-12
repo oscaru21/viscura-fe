@@ -53,13 +53,34 @@
 
     <div hlmCardFooter class="flex justify-between py-4 sticky top-0 z-50 bg-background">
         <h3 hlmCardTitle>Feedback</h3>
-        
-        <button hlmBtn class="gap-2">
-            <hlm-icon size='sm' name="lucidePlus" />
-            Feedback</button>
+            <hlm-dialog>
+                <button hlmBtn brnDialogTrigger>
+                    <hlm-icon size='sm' name="lucidePlus" />
+                </button> 
+                <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+                    <hlm-dialog-header>
+                        <h3 hlmDialogTitle>Provide feedback</h3>
+                        <p hlmCardDescription>Include here comments about the generated content or images in the post</p>
+                    </hlm-dialog-header>
+                    <div class="py-4 grid gap-4">
+                        <form [formGroup]="feedbackForm">
+                            <label hlmLabel for="prompt" class="block w-full">
+                            Feedback
+                            <input hlmInput id="prompt" type="text" class="w-full" formControlName="comment"/>
+                            </label>
+                        </form>
+                    </div>
+                    <hlm-dialog-footer>
+                      @if(!isLoading()){
+                        <button hlmBtn type="submit" [disabled]="false" (click)="addComment(ctx)">Add</button>
+                      } @else {
+                        <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
+                      }
+                    </hlm-dialog-footer>
+                  </hlm-dialog-content>
+            </hlm-dialog>
     </div>
-    <app-feedback></app-feedback>
-    <app-feedback></app-feedback>
-    <app-feedback></app-feedback>
-    <app-feedback></app-feedback>
+    @for(feedback of feedbacks(); track feedback.id) {
+        <app-feedback [feedback]="feedback"></app-feedback>
+    }
 </section>

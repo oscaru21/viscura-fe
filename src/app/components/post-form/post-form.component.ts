@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { provideIcons } from '@ng-icons/core';
 import { lucideBrain, lucideCheck, lucideChevronDown, lucideEdit2, lucideLoader2, lucidePlus, lucideSparkles } from '@ng-icons/lucide';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
@@ -13,6 +13,8 @@ import { HlmSeparatorDirective } from '@spartan-ng/ui-separator-helm';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
+import { FeedbackService } from '../../services/feedback/feedback.service';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-post-form',
@@ -42,12 +44,15 @@ import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-n
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
     HlmDialogTitleDirective,
+    ReactiveFormsModule
   ],
   providers: [provideIcons({ lucideEdit2, lucideBrain, lucidePlus, lucideSparkles, lucideLoader2 })],
   templateUrl: './post-form.component.html',
   styleUrl: './post-form.component.scss'
 })
 export class PostFormComponent {
+  feedbackService = inject(FeedbackService);
+
   tags = signal(['cars', 'ferrari', 'showcase', 'red', 'fast', 'luxury']);
   MAX_TAGS = 5;
   displayTags = computed(() => this.tags().slice(0, this.MAX_TAGS));
@@ -56,6 +61,15 @@ export class PostFormComponent {
   isEditing = signal(false);
 
   content = signal('');
+  feedbacks = this.feedbackService.feedbacks;
+
+  feedbackForm = new FormGroup({
+    comment: new FormControl('', [Validators.required, Validators.minLength(3)])
+  })
+
+  constructor() {
+    this.feedbackService.getFeedbacks();
+  }
 
   generateContent(ctx: any) {
     this.isLoading.set(true);
@@ -72,5 +86,14 @@ export class PostFormComponent {
 
   toggleEditing() {
     this.isEditing.set(!this.isEditing());
+  }
+
+  addComment(ctx: any) {
+    if (this.feedbackForm.valid) {
+      const comment = this.feedbackForm.value.comment as string;
+      this.feedbackService.createFeedback(comment);
+      this.feedbackForm.reset();
+      ctx.close();
+    }
   }
 }
