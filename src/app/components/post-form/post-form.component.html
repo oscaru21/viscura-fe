@@ -1,0 +1,45 @@
+<section class="w-full h-full flex-1 my-4 relative z-50" hlmCard>
+    <div hlmCardHeader>
+        <h3 hlmCardTitle>Post</h3>
+        <p hlmCardDescription>Autogenerate content for this post, levarage the power of GenAI to focus on what really matters</p>
+    </div>
+    <p hlmCardContent>
+        <label class="block" hlmLabel>
+            Tags
+            <div class="flex flex-wrap gap-2 my-2">
+                @for(tag of displayTags(); track tag) {
+                    <a target="_blank" hlmBadge>#{{tag}}</a>
+                }
+                @if(tags().length > MAX_TAGS) {
+                <!-- TODO: see more button -->
+                }
+            </div>
+        </label>
+        <label class="flex justify-between items-center" hlmLabel>
+            Content 
+            <div class="flex flex-row items-center">
+                <button hlmBtn variant='ghost'>
+                    <hlm-icon size='sm' name="lucideBrain" />
+                </button>      
+                <button hlmBtn variant='ghost'>
+                    <hlm-icon size='sm' name="lucideEdit2" />
+                </button>
+            </div>
+        </label>
+        <textarea class="min-h-[170px] w-full mt-2" hlmInput placeholder="Type your content here."></textarea>
+    </p>
+
+    <div hlmSeparator></div>
+
+    <div hlmCardFooter class="flex justify-between mt-2">
+        <h3 hlmCardTitle>Feedback</h3>
+        
+        <button hlmBtn class="gap-2">
+            <hlm-icon size='sm' name="lucidePlus" />
+            Feedback</button>
+    </div>
+    <app-feedback></app-feedback>
+    <app-feedback></app-feedback>
+    <app-feedback></app-feedback>
+    <app-feedback></app-feedback>
+</section>

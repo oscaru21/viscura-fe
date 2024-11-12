@@ -1,0 +1,28 @@
+<div class="flex flex-col h-full items-center px-8 max-w-6xl mx-auto">
+    <div class="grid h-full grid-rows-[20%,60%] md:grid-rows-1 md:grid-cols-2 gap-4 w-full">
+        <div id="form" class="order-2 md:order-1">
+            <app-post-form></app-post-form>
+        </div>
+        <div id="photos" class="flex flex-col justify-center items-center w-full h-full order-1 md:order-2 max-h-[90vh] sticky top-0">
+            <div class="flex items-center justify-center w-full p-4">
+                <hlm-carousel class="w-[80%] md:w-full max-w-xs">
+                  <hlm-carousel-content >
+                  @for (item of items; track item) {
+                    <hlm-carousel-item >
+                      <div class="border border-solid border-2 border-secondary roudend-md">
+                        <section hlmCard>
+                          <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
+                            <span class="text-4xl font-semibold">{{ item }}</span>
+                          </p>
+                        </section>
+                      </div>
+                    </hlm-carousel-item>
+                  }
+                  </hlm-carousel-content>
+                  <button hlm-carousel-previous></button>
+                  <button hlm-carousel-next></button>
+                </hlm-carousel>
+              </div>
+        </div>
+    </div>
+</div>
