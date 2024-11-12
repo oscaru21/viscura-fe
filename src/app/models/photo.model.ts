@@ -2,5 +2,5 @@ export interface Photo {
     id: number;
     name: string;
     url: string;
-    resolution: string;
+    resolution?: string;
 }

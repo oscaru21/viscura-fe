@@ -108,7 +108,10 @@ export class PhotosService {
   }
 
   uploadPhotos(eventId: number, files: FormData) {
-    return this.http.post(`${this.baseUrl}/events/${eventId}/photos`, files);
+    return this.http.post<{image_ids: number[]}>(`${this.baseUrl}/events/${eventId}/photos`, files).pipe(tap((res) => {
+      const uploadedPhotos = [...this.state().photos, ...res.image_ids.map((id) => ({ id, url: `${this.baseUrl}/events/${this.eventsService.currentEvent()}/photos/${id}.png`, name: `${id}.png` }))]
+      this.photosLoadedSubject$.next(uploadedPhotos);
+    }));
   }
 
   semanticSearch(eventId: number, query: string) {

@@ -18,15 +18,35 @@
         <label class="flex justify-between items-center" hlmLabel>
             Content 
             <div class="flex flex-row items-center">
-                <button hlmBtn variant='ghost'>
-                    <hlm-icon size='sm' name="lucideBrain" />
-                </button>      
-                <button hlmBtn variant='ghost'>
-                    <hlm-icon size='sm' name="lucideEdit2" />
-                </button>
+                <hlm-dialog>
+                    <button hlmBtn variant="ghost" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white bold" brnDialogTrigger>
+                        <hlm-icon size='sm' name="lucideSparkles" />
+                    </button> 
+                    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+                        <hlm-dialog-header>
+                            <h3 hlmDialogTitle>Content Generation</h3>
+                            <p hlmCardDescription>Autogenerate content for this post, using event specific information 🚀</p>
+                        </hlm-dialog-header>
+                        <div class="py-4 grid gap-4">
+                            <form>
+                                <label hlmLabel for="prompt" class="block w-full">
+                                Prompt
+                                <input hlmInput id="prompt" type="text" class="w-full"/>
+                                </label>
+                            </form>
+                        </div>
+                        <hlm-dialog-footer>
+                          @if(!isLoading()){
+                            <button hlmBtn type="submit" [disabled]="false" (click)="generateContent(ctx)">Generate</button>
+                          } @else {
+                            <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
+                          }
+                        </hlm-dialog-footer>
+                      </hlm-dialog-content>
+                </hlm-dialog>     
             </div>
         </label>
-        <textarea class="min-h-[170px] w-full mt-2" hlmInput placeholder="Type your content here."></textarea>
+        <textarea class="min-h-[170px] w-full mt-2" hlmInput placeholder="Type your content here.">{{content()}}</textarea>
     </p>
 
     <div hlmSeparator></div>
