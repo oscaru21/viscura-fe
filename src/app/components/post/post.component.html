@@ -7,15 +7,9 @@
             <div class="flex items-center justify-center w-full p-4">
                 <hlm-carousel class="w-[80%] md:w-full max-w-xs">
                   <hlm-carousel-content >
-                  @for (item of items; track item) {
+                  @for (image of images; track image) {
                     <hlm-carousel-item >
-                      <div class="border border-solid border-2 border-secondary roudend-md">
-                        <section hlmCard>
-                          <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
-                            <span class="text-4xl font-semibold">{{ item }}</span>
-                          </p>
-                        </section>
-                      </div>
+                      <img class="flex items-center justify-center aspect-square rounded-lg" [src]="image"/>
                     </hlm-carousel-item>
                   }
                   </hlm-carousel-content>
