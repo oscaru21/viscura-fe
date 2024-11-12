@@ -1,4 +1,4 @@
-<section class="w-full h-full flex-1 my-4 relative z-50" hlmCard>
+<section class="w-full h-full flex-1 my-4 relative z-50 overflow-auto" hlmCard>
     <div hlmCardHeader>
         <h3 hlmCardTitle>Post</h3>
         <p hlmCardDescription>Autogenerate content for this post, levarage the power of GenAI to focus on what really matters</p>
@@ -47,15 +47,17 @@
             </div>
         </label>
         <textarea class="min-h-[170px] w-full mt-2" hlmInput placeholder="Type your content here.">{{content()}}</textarea>
+        
     </p>
-
     <div hlmSeparator></div>
 
-    <div hlmCardFooter class="flex justify-between py-4 sticky top-0 z-50 bg-background">
-        <h3 hlmCardTitle>Feedback</h3>
+    <div hlmCardFooter class="flex flex-col">
+        <div class="flex w-full justify-between items-center py-4 sticky top-0 z-50 bg-background">
+            <h3 hlmCardTitle>Feedback</h3>
             <hlm-dialog>
-                <button hlmBtn brnDialogTrigger>
+                <button hlmBtn brnDialogTrigger class="gap-2">
                     <hlm-icon size='sm' name="lucidePlus" />
+                    Comment
                 </button> 
                 <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
                     <hlm-dialog-header>
@@ -79,8 +81,11 @@
                     </hlm-dialog-footer>
                   </hlm-dialog-content>
             </hlm-dialog>
+        </div>
+        <div class="w-full">
+            @for(feedback of feedbacks(); track feedback.id) {
+                <app-feedback [feedback]="feedback"></app-feedback>
+            }
+        </div>
     </div>
-    @for(feedback of feedbacks(); track feedback.id) {
-        <app-feedback [feedback]="feedback"></app-feedback>
-    }
 </section>
