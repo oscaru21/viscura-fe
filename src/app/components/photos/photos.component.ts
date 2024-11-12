@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import { lucideSearch } from '@ng-icons/lucide';
+import { lucideLoader2, lucideSearch } from '@ng-icons/lucide';
 import { HlmCommandInputWrapperComponent } from '@spartan-ng/ui-command-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -46,7 +46,7 @@ import { PhotosActionsComponent } from '../photos-actions/photos-actions.compone
 
     ReactiveFormsModule
   ],
-  providers: [provideIcons({ lucideSearch })],
+  providers: [provideIcons({ lucideSearch, lucideLoader2 })],
   templateUrl: './photos.component.html',
   styleUrl: './photos.component.scss'
 })
@@ -56,6 +56,7 @@ export class PhotosComponent implements OnInit {
   activeRoute = inject(ActivatedRoute);
 
   isSelecting = this.photosService.isSelecting;
+  isUploading = signal(false);
 
   selectedPhotos: File[] = [];
   eventId = Number(this.activeRoute.snapshot.paramMap.get('eventId'));
@@ -84,6 +85,7 @@ export class PhotosComponent implements OnInit {
   }
 
   onUpload(ctx: any) {
+    this.isUploading.set(true);
     const formData = new FormData();
 
     this.selectedPhotos.forEach(photo => {
@@ -91,6 +93,7 @@ export class PhotosComponent implements OnInit {
     });
 
     this.photosService.uploadPhotos(this.eventId, formData).pipe(first()).subscribe((photos: any) => {
+      this.isUploading.set(false);
       ctx.close();
     });
   }

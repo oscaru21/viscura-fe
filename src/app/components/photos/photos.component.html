@@ -20,7 +20,11 @@
                   </form>
               </div>
               <hlm-dialog-footer>
-                <button hlmBtn type="submit" [disabled]="!selectedPhotos.length" (click)="onUpload(ctx)">Upload</button>
+                @if(!isUploading()){
+                  <button hlmBtn type="submit" [disabled]="!selectedPhotos.length" (click)="onUpload(ctx)">Upload</button>
+                } @else {
+                  <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
+                }
               </hlm-dialog-footer>
             </hlm-dialog-content>
       </hlm-dialog>
