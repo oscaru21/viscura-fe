@@ -22,6 +22,8 @@ export class HlmDialogService {
 	private readonly _brnDialogService = inject(BrnDialogService);
 
 	public open(component: ComponentType<unknown> | TemplateRef<unknown>, options?: Partial<HlmDialogOptions>) {
+		console.log(component);
+		console.log(options);
 		options = {
 			...DEFAULT_BRN_DIALOG_OPTIONS,
 			closeDelay: 100,

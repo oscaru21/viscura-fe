@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { lucideLoader2, lucideSearch } from '@ng-icons/lucide';
 import { HlmCommandInputWrapperComponent } from '@spartan-ng/ui-command-helm';
@@ -11,12 +11,13 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { PhotosService } from '../../services/photos.service';
 import { debounceTime, first } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
+import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogService, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { ActivatedRoute } from '@angular/router';
 import { EventsService } from '../../services/events/events.service';
 import { PhotosActionsComponent } from '../photos-actions/photos-actions.component';
+import { EmptyComponent } from '../empty/empty.component';
 
 @Component({
   selector: 'app-photos',
@@ -44,16 +45,19 @@ import { PhotosActionsComponent } from '../photos-actions/photos-actions.compone
     PhotoComponent,
     PhotosActionsComponent,
 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    EmptyComponent
   ],
   providers: [provideIcons({ lucideSearch, lucideLoader2 })],
   templateUrl: './photos.component.html',
   styleUrl: './photos.component.scss'
 })
 export class PhotosComponent implements OnInit {
+  @ViewChild('uploadDialog') uploadDialog: TemplateRef<any> | undefined;
   photosService = inject(PhotosService);
   eventsService = inject(EventsService);
   activeRoute = inject(ActivatedRoute);
+  dialogService = inject(HlmDialogService);
 
   isSelecting = this.photosService.isSelecting;
   isUploading = signal(false);

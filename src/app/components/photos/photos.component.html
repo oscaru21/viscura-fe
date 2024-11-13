@@ -5,7 +5,7 @@
           <input class="w-full border-none" placeholder="Search..." hlmInput formControlName="search"/>
         </hlm-cmd-input-wrapper>
         
-        <hlm-dialog>
+        <hlm-dialog #uploadDialog>
           <button brnDialogTrigger hlmBtn [brnMenuTriggerFor]="menu">Add</button>
           <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
               <hlm-dialog-header>
@@ -38,11 +38,10 @@
         @for(photo of eventPhotos(); track photo.id) {
           <app-photo [photo]="photo"></app-photo>
         } @empty {
-          <p>No photos found</p>
+            <app-empty class="w-full col-span-full" />
         }
     </div>
 </div>
-<!-- {{ eventPhotos() | json }} -->
 
 <ng-template #menu>
 </ng-template>
