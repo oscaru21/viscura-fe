@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, effect, inject, signal } from '@angular/core';
+import { Form, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideIcons } from '@ng-icons/core';
 import { lucideGithub, lucideLoader2 } from '@ng-icons/lucide';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -8,31 +8,47 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { HlmSpinnerComponent } from '@spartan-ng/ui-spinner-helm';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
-	selector: 'app-home',
+	selector: 'app-login',
 	standalone: true,
 	imports: [
 		HlmButtonDirective,
-    HlmCardDirective,
+        HlmCardDirective,
 		HlmIconComponent,
 		HlmInputDirective,
 		HlmSpinnerComponent,
-		FormsModule,
+		ReactiveFormsModule,
 		HlmLabelDirective,
 	],
 	providers: [provideIcons({ lucideGithub, lucideLoader2 })],
-	templateUrl: './home.component.html', 
-  styleUrl: './home.component.scss',
+	templateUrl: './login.component.html', 
   host: {
     class: 'centered'
   }
 })
-export class HomeComponent {
+export class LoginComponent {
+	authService = inject(AuthService);
+	router = inject(Router);
 	isLoading = signal(false);
+
+	authForm: FormGroup = new FormGroup({
+		email: new FormControl(''),
+		password: new FormControl(''),
+	});
+
+	constructor() {
+		effect(() => {
+			if (this.authService.user()) {
+			  this.router.navigate(['events']);
+			}
+		});
+	}
 
 	send() {
 		this.isLoading.set(true);
-		setTimeout(() => this.isLoading.set(false), 3000);
+		this.authService.login(this.authForm.value)
 	}
 }

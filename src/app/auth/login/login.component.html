@@ -1,11 +1,11 @@
 <section hlmCard class="m-2">
     <div class="mx-auto w-full justify-center space-y-6 sm:w-[350px] p-4 md:p-6">
         <div class="space-y-2 text-center">
-            <h1 class="text-2xl font-semibold tracking-tight">Create an account</h1>
-            <p class="text-muted-foreground text-sm">Enter your email below to create your account</p>
+            <h1 class="text-2xl font-semibold tracking-tight">Login</h1>
+            <p class="text-muted-foreground text-sm">Enter your email and password below </p>
         </div>
         <div class="grid gap-6">
-            <form (ngSubmit)="send()">
+            <form [formGroup]="authForm" (ngSubmit)="send()" class="flex flex-col gap-4">
                 <label hlmLabel class="sr-only" for="email">Email</label>
                 <input
                     hlmInput
@@ -14,29 +14,26 @@
                     type="email"
                     id="email"
                     placeholder="name@example.com"
+                    autocomplete="on"
+                    [formControlName]="'email'"
+                />
+                <label hlmLabel class="sr-only" for="password">Password</label>
+                <input
+                    hlmInput
+                    class="w-full"
+                    placeholder="Password"
+                    type="password"
+                    id="password"
                     autocomplete="off"
+                    [formControlName]="'password'"
                 />
                 <button hlmBtn [disabled]="isLoading()" class="mt-2 w-full" type="submit">
                     @if (isLoading()) {
                         <hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" />
                     }
-                    Sign In with Email
+                    Sign In
                 </button>
             </form>
-            <div class="relative">
-                <div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div>
-                <div class="relative flex justify-center text-xs uppercase">
-                    <span class="bg-background text-muted-foreground px-2">Or continue with</span>
-                </div>
-            </div>
-            <button hlmBtn variant="outline" [disabled]="isLoading()">
-                @if (isLoading()) {
-                    <hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" />
-                } @else {
-                    <hlm-icon class="mr-2" size="sm" name="lucideGithub" />
-                }
-                GitHub
-            </button>
         </div>
         <p class="text-muted-foreground text-center text-sm sm:px-8">
             By clicking continue, you agree to our

@@ -1,8 +1,20 @@
 <hlm-menu-bar class="w-fill border-0 text-foreground">
-    <button hlmMenuBarItem class="px-3 font-medium" (click)="redirectToHome()">
-        <hlm-icon size='lg' name="lucideHardDrive" />
-    </button>
-    <button hlmMenuBarItem class="px-3 font-bold" (click)="redirectToEvents()">Events</button>
-    <!-- <button hlmMenuBarItem class="px-3 font-medium" (click)="redirectToPhotos()">Photos</button>
-    <button hlmMenuBarItem class="px-3 font-medium">Posts</button> -->
+    <div class="flex justify-between align-center w-full">
+        <div id="left" class="flex justify-left align-center gap-2">
+            <button hlmMenuBarItem class="px-3 font-medium" (click)="redirectToHome()">
+                <hlm-icon size='lg' name="lucideHardDrive" />
+            </button>
+            @if(authService.user()){
+                <button hlmMenuBarItem class="px-3 font-bold" (click)="redirectToEvents()">Events</button>
+            } 
+        </div>
+        <div id="right" class="flex justify-right align-center gap-2 p-4">
+            @if(!authService.user()){
+                <button hlmBtn variant='outline'>Sign In</button>
+                <button hlmBtn>Register</button>
+            } @else {
+                <button hlmBtn variant='outline' (click)="authService.logout()">Log Out</button>
+            }
+        </div>
+    </div>
 </hlm-menu-bar>
