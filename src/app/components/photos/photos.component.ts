@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventsService } from '../../services/events/events.service';
 import { PhotosActionsComponent } from '../photos-actions/photos-actions.component';
 import { EmptyComponent } from '../empty/empty.component';
+import { HlmSwitchComponent } from '@spartan-ng/ui-switch-helm';
 
 @Component({
   selector: 'app-photos',
@@ -41,6 +42,7 @@ import { EmptyComponent } from '../empty/empty.component';
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
     HlmDialogTitleDirective,
+    HlmSwitchComponent,
 
     PhotoComponent,
     PhotosActionsComponent,
@@ -63,6 +65,7 @@ export class PhotosComponent implements OnInit {
   isUploading = signal(false);
 
   selectedPhotos: File[] = [];
+  filterBlurryPhotos: boolean = false;
   eventId = Number(this.activeRoute.snapshot.paramMap.get('eventId'));
 
   eventPhotos = this.photosService.filteredPhotos;
@@ -94,11 +97,15 @@ export class PhotosComponent implements OnInit {
 
     this.selectedPhotos.forEach(photo => {
       formData.append('files', photo, photo.name);
+      formData.append('apply_filter', this.filterBlurryPhotos ? 'true' : 'false');
     });
 
     this.photosService.uploadPhotos(this.eventId, formData).pipe(first()).subscribe((photos: any) => {
       this.isUploading.set(false);
       ctx.close();
     });
+  }
+  onFilterChange(event: any) {
+    this.filterBlurryPhotos = event;
   }
 }

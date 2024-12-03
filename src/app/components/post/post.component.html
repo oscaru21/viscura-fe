@@ -7,7 +7,7 @@
             <div class="flex items-center justify-center w-full p-4">
                 <hlm-carousel class="w-[80%] md:w-full max-w-xs">
                   <hlm-carousel-content >
-                  @for (image of images; track image) {
+                  @for (image of images(); track image) {
                     <hlm-carousel-item >
                       <img class="flex items-center justify-center aspect-square rounded-lg" [src]="image"/>
                     </hlm-carousel-item>

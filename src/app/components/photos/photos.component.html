@@ -14,9 +14,17 @@
               <div class="py-4 grid gap-4">
                   <form>
                       <div class="items-center grid grid-cols-4 gap-4">
-                        <label hlmLabel for="image" class="text-right">Photos</label>
+                        <label hlmLabel for="image">Photos</label>
                         <input hlmInput id="image" type="file" class="col-span-3" (change)="onFileSelect($event)" multiple/>
                       </div>
+                      <div class="items-center grid grid-cols-4 gap-4 mt-4">
+                      <label hlmLabel for="image" class="col-span-3">Filter Blurry Photos</label>
+                      <label class="text-right" hlmLabel>
+                        <hlm-switch (changed)="onFilterChange($event)" />
+
+                      </label>
+                      
+                    </div>
                   </form>
               </div>
               <hlm-dialog-footer>

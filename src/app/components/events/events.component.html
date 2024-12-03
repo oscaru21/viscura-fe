@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center p-8 max-w-6xl mx-auto">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
         @for (event of events(); track event) {
-            <button hlmCard (click)="navigateToEventPhotos(event.id)" class="p-4 w-full h-full flex flex-col justify-between items-center text-center hover:scale-105">
+            <button hlmCard (click)="navigateToEventPhotos(event.id)" class="p-4 w-full h-full min-h-[150px] flex flex-col justify-between items-center text-center hover:scale-105">
                     <div class="flex flex-row justify-between items-center w-full">
                         <h3 hlmCardTitle class="w-full">{{event.title}}</h3>
                     </div>

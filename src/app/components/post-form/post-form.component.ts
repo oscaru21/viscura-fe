@@ -15,6 +15,8 @@ import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { FeedbackService } from '../../services/feedback/feedback.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { PostsService } from '../../services/posts/posts.service';
 
 @Component({
   selector: 'app-post-form',
@@ -52,6 +54,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class PostFormComponent {
   feedbackService = inject(FeedbackService);
+  postService = inject(PostsService);
+  http = inject(HttpClient);
 
   tags = signal(['cars', 'ferrari', 'showcase', 'red', 'fast', 'luxury']);
   MAX_TAGS = 5;
@@ -73,11 +77,16 @@ export class PostFormComponent {
 
   generateContent(ctx: any) {
     this.isLoading.set(true);
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.content.set("🏁🔥 Rev Up Your Engines! 🔥🏁 \n Get ready for the ultimate race car showdown! 🏎️💨 The engines are roaring, the track is set, and adrenaline is running high! 💥 Don't miss out on the most thrilling event of the year. 🏁");
+    const requestBody = {
+      user_prompt: 'Generate an instagram post',
+      tone: 'friendly',
+      max_tokens: 100,
+    };
+    this.http.post(`http://localhost:8000/posts/${this.postService.currentPost()}/generate`, requestBody).subscribe((res: any) => {
+      this.content.set(res['caption']);
       ctx.close();
-    }, 5000);
+      this.isLoading.set(false);
+    });
   }
 
   updateContent(text: string) {

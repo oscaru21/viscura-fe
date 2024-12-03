@@ -1,9 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { HlmCarouselComponent, HlmCarouselContentComponent, HlmCarouselItemComponent, HlmCarouselNextComponent, HlmCarouselPreviousComponent } from '@spartan-ng/ui-carousel-helm';
 import { PostFormComponent } from '../post-form/post-form.component';
 import { ActivatedRoute } from '@angular/router';
 import { EventsService } from '../../services/events/events.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PhotosService } from '../../services/photos.service';
+import { PostsService } from '../../services/posts/posts.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-post',
@@ -14,7 +17,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     HlmCarouselItemComponent,
     HlmCarouselNextComponent,
     HlmCarouselPreviousComponent,
-    PostFormComponent
+    PostFormComponent,
+    CommonModule
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
@@ -22,13 +26,17 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class PostComponent {
   activeRoute = inject(ActivatedRoute);
   eventsService = inject(EventsService);
+  photosService = inject(PhotosService);
+  postService = inject(PostsService);
 
-  images = ['http://localhost:8000/events/1/photos/49.png', 'http://localhost:8000/events/1/photos/11.png', 'http://localhost:8000/events/1/photos/21.png', 'http://localhost:8000/events/1/photos/47.png'];
-  items = Array.from({ length: 5}, (_, i) => i + 1);
+  post = this.postService.currentPostData;
+  images = computed(() => this.photosService.selectedPhotos().map(photo => photo.url));
 
   constructor() { 
     this.activeRoute.params.pipe(takeUntilDestroyed()).subscribe(params => {
-      this.eventsService.changeEvent$.next(params['eventId']);
+      const { eventId, postId } = params;
+      this.eventsService.changeEvent$.next(eventId);
+      this.postService.changePost$.next(postId);
     });
   }
 }
