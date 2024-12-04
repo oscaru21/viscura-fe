@@ -8,6 +8,7 @@
                     <p hlmCardDescription class="w-full">{{event.description}}</p>
             </button>
         } 
+        @if(authService.user()?.role == 'CM'){
         <hlm-dialog>
             <button brnDialogTrigger hlmCard class="p-4 w-full h-full flex flex-col justify-between items-center text-center hover:scale-105">
                 <div class="flex flex-col mb-4 gap-2">
@@ -15,12 +16,13 @@
                     <p hlmCardDescription class="w-full">Add new event</p>
                 </div>
             </button>
+            
             <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
                 <hlm-dialog-header>
                     <h3 hlmDialogTitle>Add new event</h3>
                 </hlm-dialog-header>
                 <div class="py-4 grid gap-4">
-                    <form [formGroup]="form">
+                    <form [formGroup]="form" class="flex flex-col gap-4">
                         <div class="items-center grid grid-cols-4 gap-4">
                             <label hlmLabel for="title" class="text-right">Title</label>
                             <input hlmInput id="title" formControlName="title" class="col-span-3" />
@@ -28,14 +30,26 @@
                         <div class="items-center grid grid-cols-4 gap-4">
                             <label hlmLabel for="description" class="text-right">Description</label>
                             <textarea hlmInput id="description" formControlName="description" class="col-span-3" rows="5"></textarea>
-                          </div>
+                        </div>
+                        <div class="items-center grid grid-cols-4 gap-4">
+                            <label hlmLabel for="file">Context File</label>
+                            <input hlmInput id="file" type="file" class="col-span-3" (change)="onFileSelect($event)"/>
+                        </div>
+                        <p hlmDialogDescription>
+                            You can upload a context file for this event. A .txt file containing relevant information about the event. 
+                            This would help provide more tailored captions for the posts.
+                        </p>
                     </form>
                 </div>
                 <hlm-dialog-footer>
-                  <button hlmBtn type="submit" (click)="createEvent(ctx)">Add</button>
+                    @if(!isUploading()){
+                        <button hlmBtn type="submit" (click)="createEvent(ctx)">Add</button>
+                      } @else {
+                        <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
+                      }
                 </hlm-dialog-footer>
               </hlm-dialog-content>
         </hlm-dialog>
-        
+        }
     </div>
 </div>

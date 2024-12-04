@@ -1,20 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
 import { EventsService } from '../../services/events/events.service';
 import { CommonModule } from '@angular/common';
-import { Event } from '../../models/event.model';
 
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import { lucidePlus } from '@ng-icons/lucide';
+import { lucideLoader2, lucidePlus } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmCardContentDirective, HlmCardDescriptionDirective, HlmCardDirective, HlmCardHeaderDirective, HlmCardTitleDirective } from '@spartan-ng/ui-card-helm';
-import { BrnDialogContentDirective, BrnDialogState, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
+import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { first } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-events',
@@ -36,6 +36,7 @@ import { first } from 'rxjs';
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
     HlmDialogTitleDirective,
+    HlmDialogDescriptionDirective,
 
     HlmLabelDirective,
     HlmInputDirective,
@@ -43,16 +44,21 @@ import { first } from 'rxjs';
 
     ReactiveFormsModule
     ],
-  providers: [provideIcons({ lucidePlus })],
+  providers: [provideIcons({ lucidePlus, lucideLoader2 })],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })
 export class EventsComponent {
+  authService = inject(AuthService);
   router = inject(Router);
   eventsService = inject(EventsService);
   events = this.eventsService.events;
 
+  contextFile: File | null = null;
+
   form: FormGroup;
+
+  isUploading = signal(false);
 
   constructor() {
     this.eventsService.getEvents().pipe(first()).subscribe();
@@ -63,13 +69,26 @@ export class EventsComponent {
   }
 
   createEvent(ctx: any) {
+    this.isUploading.set(true);
+
+    let formData: FormData | undefined;
+    if(this.contextFile) {
+      formData = new FormData();
+      formData.append('files', this.contextFile, this.contextFile.name);
+    }
+    
     const event = this.form.value;
-    this.eventsService.createEvent(event).subscribe((event: any) => {
+    this.eventsService.createEvent(event, formData).subscribe((event: any) => {
       ctx.close();
+      this.isUploading.set(false);
     });
   }
 
   navigateToEventPhotos(eventId: string) {
     this.router.navigate(['/events', eventId, 'photos']);
+  }
+
+  onFileSelect(event: any) {
+    this.contextFile = event.target.files[0]; 
   }
 }

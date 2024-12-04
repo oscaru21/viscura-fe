@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal, Signal } from '@angular/core';
 import { Event } from '../../models/event.model';
-import { Subject } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface EventsState {
@@ -78,7 +78,7 @@ export class EventsService {
     );
   }
 
-  createEvent(event: Event) {
+  createEvent(event: Event, file?: FormData) {
     const requestBody = {
       title: event.title,
       description: event.description,
@@ -86,13 +86,19 @@ export class EventsService {
     };
     return this.http.post(`${this.baseUrl}/events`, requestBody).pipe(
       tap((res: any) => {
-        event = { ...event, id: res.id };
+        event = { ...event, id: res.event_id };
         this.addEvent$.next(event);
-      })
+      }),
+      switchMap((res) => file ? this.uploadContext(res.event_id, file): of({event_id: res.id}))
     );
   }
 
   deleteEvent(eventId: string) {
     return this.http.delete(`${this.baseUrl}/events/${eventId}`, { params: { org_id: this.organizationId } });
+  }
+
+  uploadContext(eventId: string, file: FormData) {
+    const queryParams = { context_type: 'document' };
+    return this.http.post(`${this.baseUrl}/events/${eventId}/context`, file, { params: queryParams });
   }
 }
