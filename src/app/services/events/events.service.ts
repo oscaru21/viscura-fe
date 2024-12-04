@@ -36,6 +36,7 @@ export class EventsService {
   private eventsLoadedSubject$ = new Subject<Event[]>();
   changeEvent$ = new Subject<string>();
   private addEvent$ = new Subject<Event>();
+  private deleteEvent$ = new Subject<string>();
 
   constructor(private http: HttpClient) {
     // reducers
@@ -69,6 +70,12 @@ export class EventsService {
         events: [...state.events, event]
       }));
     });
+    this.deleteEvent$.pipe(takeUntilDestroyed()).subscribe((eventId) => {
+      this.eventsState.update((state) => ({
+        ...state,
+        events: state.events.filter((event) => event.id !== eventId)
+      }));
+    });
   }
 
   getEvents() {
@@ -94,7 +101,9 @@ export class EventsService {
   }
 
   deleteEvent(eventId: string) {
-    return this.http.delete(`${this.baseUrl}/events/${eventId}`, { params: { org_id: this.organizationId } });
+    return this.http.delete(`${this.baseUrl}/events/${eventId}`, { params: { org_id: this.organizationId } }).pipe(
+      tap(() => this.deleteEvent$.next(eventId))
+    );
   }
 
   uploadContext(eventId: string, file: FormData) {

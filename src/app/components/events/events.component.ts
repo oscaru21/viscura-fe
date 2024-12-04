@@ -15,6 +15,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
+import { BrnContextMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuComponent, HlmMenuItemDirective } from '@spartan-ng/ui-menu-helm';
 
 @Component({
   selector: 'app-events',
@@ -42,7 +44,10 @@ import { AuthService } from '../../auth/auth.service';
     HlmInputDirective,
     HlmButtonDirective,
 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HlmMenuComponent,
+    HlmMenuItemDirective,
+    BrnContextMenuTriggerDirective
     ],
   providers: [provideIcons({ lucidePlus, lucideLoader2 })],
   templateUrl: './events.component.html',
@@ -78,7 +83,7 @@ export class EventsComponent {
     }
     
     const event = this.form.value;
-    this.eventsService.createEvent(event, formData).subscribe((event: any) => {
+    this.eventsService.createEvent(event, formData).pipe(first()).subscribe((event: any) => {
       ctx.close();
       this.isUploading.set(false);
     });
@@ -90,5 +95,9 @@ export class EventsComponent {
 
   onFileSelect(event: any) {
     this.contextFile = event.target.files[0]; 
+  }
+
+  deleteEvent(eventId: string) {
+    this.eventsService.deleteEvent(eventId).pipe(first()).subscribe();
   }
 }
