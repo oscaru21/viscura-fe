@@ -116,11 +116,10 @@ export class PhotosService {
 
   semanticSearch(eventId: number, query: string) {
     if (!query || query === ''){
-      console.log(query);
       this.filteredPhotosSubject$.next(this.photos().map((photo) => photo.id));
       return of([]);
     }
-    return this.http.get(`${this.baseUrl}/events/${eventId}/photos/search/`, { params: { text: query, threshold: 0.20 } }).pipe(
+    return this.http.get(`${this.baseUrl}/events/${eventId}/photos/search/`, { params: { text: query, threshold: 0.25 } }).pipe(
       first() as any,
       tap((ids) => this.filteredPhotosSubject$.next(ids))
     ) as Observable<number[]>;

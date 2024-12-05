@@ -4,38 +4,39 @@
           <hlm-icon name="lucideSearch" />
           <input class="w-full border-none" placeholder="Search..." hlmInput formControlName="search"/>
         </hlm-cmd-input-wrapper>
-        
-        <hlm-dialog #uploadDialog>
-          <button brnDialogTrigger hlmBtn [brnMenuTriggerFor]="menu">Add</button>
-          <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-              <hlm-dialog-header>
-                  <h3 hlmDialogTitle>Add photos</h3>
-              </hlm-dialog-header>
-              <div class="py-4 grid gap-4">
-                  <form>
-                      <div class="items-center grid grid-cols-4 gap-4">
-                        <label hlmLabel for="image">Photos</label>
-                        <input hlmInput id="image" type="file" class="col-span-3" (change)="onFileSelect($event)" multiple/>
+        @if(authService.user()?.role?.includes('photographer')) {
+          <hlm-dialog #uploadDialog>
+            <button brnDialogTrigger hlmBtn [brnMenuTriggerFor]="menu">Add</button>
+            <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+                <hlm-dialog-header>
+                    <h3 hlmDialogTitle>Add photos</h3>
+                </hlm-dialog-header>
+                <div class="py-4 grid gap-4">
+                    <form>
+                        <div class="items-center grid grid-cols-4 gap-4">
+                          <label hlmLabel for="image">Photos</label>
+                          <input hlmInput id="image" type="file" class="col-span-3" (change)="onFileSelect($event)" multiple/>
+                        </div>
+                        <div class="items-center grid grid-cols-4 gap-4 mt-4">
+                        <label hlmLabel for="image" class="col-span-3">Filter Blurry Photos</label>
+                        <label class="text-right" hlmLabel>
+                          <hlm-switch (changed)="onFilterChange($event)" />
+  
+                        </label>
+                        
                       </div>
-                      <div class="items-center grid grid-cols-4 gap-4 mt-4">
-                      <label hlmLabel for="image" class="col-span-3">Filter Blurry Photos</label>
-                      <label class="text-right" hlmLabel>
-                        <hlm-switch (changed)="onFilterChange($event)" />
-
-                      </label>
-                      
-                    </div>
-                  </form>
-              </div>
-              <hlm-dialog-footer>
-                @if(!isUploading()){
-                  <button hlmBtn type="submit" [disabled]="!selectedPhotos.length" (click)="onUpload(ctx)">Upload</button>
-                } @else {
-                  <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
-                }
-              </hlm-dialog-footer>
-            </hlm-dialog-content>
-      </hlm-dialog>
+                    </form>
+                </div>
+                <hlm-dialog-footer>
+                  @if(!isUploading()){
+                    <button hlmBtn type="submit" [disabled]="!selectedPhotos.length" (click)="onUpload(ctx)">Upload</button>
+                  } @else {
+                    <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
+                  }
+                </hlm-dialog-footer>
+              </hlm-dialog-content>
+        </hlm-dialog>
+        }
       </div>
     @if(isSelecting()) {
       <div class="py-4 bg-background w-full sticky top-0 z-50">

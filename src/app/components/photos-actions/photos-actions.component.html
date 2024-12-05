@@ -23,6 +23,8 @@
               </hlm-alert-dialog-footer>
             </hlm-alert-dialog-content>
           </hlm-alert-dialog>
-          <button hlmBtn (click)="createNewPost()">Create Post</button>
+          @if(authService.user()?.role?.includes('content manager')){
+            <button hlmBtn (click)="createNewPost()">Create Post</button>
+          }
     </div>
 </section>

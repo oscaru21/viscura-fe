@@ -8,6 +8,7 @@ import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '
 import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '@spartan-ng/ui-alertdialog-helm';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostsService } from '../../services/posts/posts.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-photos-actions',
@@ -37,6 +38,7 @@ export class PhotosActionsComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   postsService = inject(PostsService);
+  authService = inject(AuthService);
 
   createNewPost() {
     const imageIds = this.photosService.selectedPhotos().map(photo => photo.id);

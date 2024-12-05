@@ -12,11 +12,11 @@ export const routes: Routes = [
         loadComponent: () => import('./components/photos/photos.component').then(m => m.PhotosComponent)},
     { 
         path: 'events/:eventId/posts/:postId', 
-        canActivate: [isAuthenticatedGuard()],
+        canActivate: [isAuthenticatedGuard(), isCMroleGuard()],
         loadComponent: () => import('./components/post/post.component').then(m => m.PostComponent)},
     { 
         path: 'events', 
-        canActivate: [isAuthenticatedGuard(), isCMroleGuard()],
+        canActivate: [isAuthenticatedGuard()],
         loadComponent: () => import('./components/events/events.component').then(m => m.EventsComponent) },
     {
         path: '',

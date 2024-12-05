@@ -4,20 +4,20 @@
         <p hlmCardDescription>Autogenerate content for this post, levarage the power of GenAI to focus on what really matters</p>
     </div>
     <p hlmCardContent>
-        <label class="block" hlmLabel>
+        <!-- <label class="block" hlmLabel>
             Tags
             <div class="flex flex-wrap gap-2 my-2">
                 @for(tag of displayTags(); track tag) {
                     <a target="_blank" hlmBadge>#{{tag}}</a>
                 }
                 @if(tags().length > MAX_TAGS) {
-                <!-- TODO: see more button -->
                 }
             </div>
-        </label>
+        </label> -->
         <label class="flex justify-between items-center" hlmLabel>
             Content 
             <div class="flex flex-row items-center">
+                @if(isContentManager){
                 <hlm-dialog>
                     <button hlmBtn variant="ghost" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white bold" brnDialogTrigger>
                         <hlm-icon size='sm' name="lucideSparkles" />
@@ -43,7 +43,8 @@
                           }
                         </hlm-dialog-footer>
                       </hlm-dialog-content>
-                </hlm-dialog>     
+                </hlm-dialog>  
+            }   
             </div>
         </label>
         <textarea class="min-h-[170px] w-full mt-2" hlmInput placeholder="Type your content here.">{{content()}}</textarea>
@@ -54,6 +55,7 @@
     <div hlmCardFooter class="flex flex-col">
         <div class="flex w-full justify-between items-center py-4 sticky top-0 z-50 bg-background">
             <h3 hlmCardTitle>Feedback</h3>
+            @if(isReviewer){
             <hlm-dialog>
                 <button hlmBtn brnDialogTrigger class="gap-2">
                     <hlm-icon size='sm' name="lucidePlus" />
@@ -81,6 +83,7 @@
                     </hlm-dialog-footer>
                   </hlm-dialog-content>
             </hlm-dialog>
+        }
         </div>
         <div class="w-full">
             @for(feedback of feedbacks(); track feedback.id) {

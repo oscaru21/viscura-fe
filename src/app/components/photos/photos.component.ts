@@ -19,6 +19,7 @@ import { EventsService } from '../../services/events/events.service';
 import { PhotosActionsComponent } from '../photos-actions/photos-actions.component';
 import { EmptyComponent } from '../empty/empty.component';
 import { HlmSwitchComponent } from '@spartan-ng/ui-switch-helm';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-photos',
@@ -60,6 +61,7 @@ export class PhotosComponent implements OnInit {
   eventsService = inject(EventsService);
   activeRoute = inject(ActivatedRoute);
   dialogService = inject(HlmDialogService);
+  authService = inject(AuthService);
 
   isSelecting = this.photosService.isSelecting;
   isUploading = signal(false);
@@ -81,9 +83,7 @@ export class PhotosComponent implements OnInit {
     this.searchForm.get('search')?.valueChanges.pipe(
       debounceTime(300),
     ).subscribe((query) => {
-      this.photosService.semanticSearch(this.eventId, query as string).pipe(first()).subscribe((ids) => {
-        console.log(ids);
-      });
+      this.photosService.semanticSearch(this.eventId, query as string).pipe(first()).subscribe();
     });
   }
 

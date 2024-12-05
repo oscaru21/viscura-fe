@@ -17,6 +17,7 @@ import { FeedbackService } from '../../services/feedback/feedback.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { PostsService } from '../../services/posts/posts.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-form',
@@ -56,6 +57,15 @@ export class PostFormComponent {
   feedbackService = inject(FeedbackService);
   postService = inject(PostsService);
   http = inject(HttpClient);
+  authService = inject(AuthService);
+
+  get isContentManager() {
+    return this.authService.user()?.role?.includes('content manager');
+  }
+
+  get isReviewer() {
+    return this.authService.user()?.role?.includes('content reviewer');
+  }
 
   tags = signal(['cars', 'ferrari', 'showcase', 'red', 'fast', 'luxury']);
   MAX_TAGS = 5;

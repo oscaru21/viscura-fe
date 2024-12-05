@@ -65,7 +65,6 @@ export class PostsService {
     }
     );
     this.addPost$.pipe(takeUntilDestroyed()).subscribe((post) => {
-      console.log('add post', post);
       this.postsState.update((state) => ({
         ...state,
         posts: [...state.posts, post]

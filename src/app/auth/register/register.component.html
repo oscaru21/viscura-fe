@@ -5,18 +5,31 @@
             <p class="text-muted-foreground text-sm">Enter your email below to create your account</p>
         </div>
         <div class="grid gap-6">
-            <form (ngSubmit)="send()">
-                <label hlmLabel class="sr-only" for="name">Full Name</label>
-                <input
-                    hlmInput
-                    class="w-full"
-                    placeholder="Full name"
-                    type="text"
-                    id="name"
-                    placeholder="John Doe"
-                    autocomplete="off"
-                />
-                <label hlmLabel class="sr-only" for="password">Password</label>
+            <form [formGroup]="registerForm" (ngSubmit)="send()" class="flex flex-col gap-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <label hlmLabel class="sr-only" for="name">First Name</label>
+                    <input
+                        hlmInput
+                        class="w-full"
+                        placeholder="First name"
+                        type="text"
+                        id="firstName"
+                        placeholder="John"
+                        autocomplete="off"
+                        formControlName="first_name"
+                    />
+                    <label hlmLabel class="sr-only" for="name">Last Name</label>
+                    <input
+                        hlmInput
+                        class="w-full"
+                        placeholder="Last name"
+                        type="text"
+                        id="lastName"
+                        placeholder="Doe"
+                        autocomplete="off"
+                        formControlName="last_name"
+                    />
+                </div>
                 <label hlmLabel class="sr-only" for="email">Email</label>
                 <input
                     hlmInput
@@ -26,6 +39,7 @@
                     id="email"
                     placeholder="name@example.com"
                     autocomplete="off"
+                    formControlName="email"
                 />
                 <label hlmLabel class="sr-only" for="password">Password</label>
                 <input
@@ -35,8 +49,19 @@
                     type="password"
                     id="password"
                     autocomplete="off"
+                    formControlName="password"
                 />
-                <button hlmBtn [disabled]="isLoading()" class="mt-2 w-full" type="submit">
+                <hlm-select class="inline-block" placeholder="Select a role" formControlName="roles">
+                    <hlm-select-trigger class="w-full">
+                      <hlm-select-value />
+                    </hlm-select-trigger>
+                    <hlm-select-content>
+                      <hlm-option value="content manager">Community Manager</hlm-option>
+                      <hlm-option value="photographer">Photographer</hlm-option>
+                      <hlm-option value="content reviewer">Content Reviewer</hlm-option>
+                    </hlm-select-content>
+                </hlm-select>
+                <button hlmBtn [disabled]="isLoading() || registerForm.invalid" class="mt-2 w-full" type="submit">
                     @if (isLoading()) {
                         <hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" />
                     }

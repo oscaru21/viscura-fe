@@ -1,9 +1,10 @@
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { BehaviorSubject, catchError, first, of, tap } from 'rxjs';
-import { Credentials } from '../models/credentials.model';
+import { Credentials, RegisterUserRequest } from '../models/credentials.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 export interface User {
     email: string;
@@ -24,6 +25,7 @@ export class AuthService {
   baseUrl = 'http://localhost:8000';
   TOKEN_NAME = 'viscura_auth'
   http = inject(HttpClient);
+  router = inject(Router);
   // sources
   private user$ = new BehaviorSubject<AuthUser>(undefined);
 
@@ -79,12 +81,12 @@ export class AuthService {
     localStorage.removeItem('user');
   }
 
-  createAccount(credentials: Credentials) {
-    const testUser: User = {
-        email: credentials.email,
-        id: 1,
-        role: ['content manager']
-    }
-    this.user$.next(testUser);
+  createAccount(credentials: RegisterUserRequest) {
+    return this.http.post(`${this.baseUrl}/auth/register`, credentials).pipe(
+      first(),
+      tap(() => {
+        this.router.navigate(['auth','login']);
+      })
+    );
   }
 }
