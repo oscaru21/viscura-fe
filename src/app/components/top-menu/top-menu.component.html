@@ -10,8 +10,8 @@
         </div>
         <div id="right" class="flex justify-right align-center gap-2 p-4">
             @if(!authService.user()){
-                <button hlmBtn variant='outline'>Sign In</button>
-                <button hlmBtn>Register</button>
+                <button hlmBtn variant='outline' (click)="redirectToLogin()">Sign In</button>
+                <button hlmBtn (click)="redirectToRegister()">Register</button>
             } @else {
                 <button hlmBtn variant='outline' (click)="authService.logout()">Log Out</button>
             }

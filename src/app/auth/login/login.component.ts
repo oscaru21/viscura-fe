@@ -10,6 +10,10 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { HlmSpinnerComponent } from '@spartan-ng/ui-spinner-helm';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
+import { HlmAlertDirective } from '@spartan-ng/ui-alert-helm';
+import { toast } from 'ngx-sonner';
+import { catchError, of } from 'rxjs';
 
 @Component({
 	selector: 'app-login',
@@ -19,9 +23,11 @@ import { Router } from '@angular/router';
         HlmCardDirective,
 		HlmIconComponent,
 		HlmInputDirective,
+		HlmAlertDirective,
 		HlmSpinnerComponent,
 		ReactiveFormsModule,
 		HlmLabelDirective,
+		HlmToasterComponent,
 	],
 	providers: [provideIcons({ lucideGithub, lucideLoader2 })],
 	templateUrl: './login.component.html', 
@@ -49,6 +55,20 @@ export class LoginComponent {
 
 	send() {
 		this.isLoading.set(true);
-		this.authService.login(this.authForm.value)
+		this.authService.login(this.authForm.value).pipe(
+			catchError(() => {
+				this.isLoading.set(false);
+				this.showError();
+				return of(null);
+			})
+		).subscribe(() => {
+			this.isLoading.set(false);
+		});
+	}
+
+	showError() {
+		toast('Error Login', {
+		  description: 'Email or password is incorrect',
+		})
 	}
 }

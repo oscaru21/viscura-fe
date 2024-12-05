@@ -20,7 +20,7 @@ export const isCMroleGuard = (): CanActivateFn => {
         const authService = inject(AuthService);
         const router = inject(Router);
 
-        if (authService.user()?.role === 'CM') {
+        if (authService.user()?.role.includes('content manager')) {
             return true;
         }
 
