@@ -81,6 +81,10 @@ export class PostFormComponent {
     comment: new FormControl('', [Validators.required, Validators.minLength(3)])
   })
 
+  promptForm = new FormGroup({
+    prompt: new FormControl('', [Validators.required, Validators.minLength(3)])
+  })
+
   constructor() {
     this.feedbackService.getFeedbacks();
   }
@@ -88,7 +92,7 @@ export class PostFormComponent {
   generateContent(ctx: any) {
     this.isLoading.set(true);
     const requestBody = {
-      user_prompt: 'Generate an instagram post',
+      user_prompt: this.promptForm.value.prompt,
       tone: 'friendly',
       max_tokens: 100,
     };

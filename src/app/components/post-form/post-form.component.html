@@ -28,20 +28,21 @@
                             <p hlmCardDescription>Autogenerate content for this post, using event specific information 🚀</p>
                         </hlm-dialog-header>
                         <div class="py-4 grid gap-4">
-                            <form>
+                            <form [formGroup]="promptForm">
                                 <label hlmLabel for="prompt" class="block w-full">
                                 Prompt
-                                <input hlmInput id="prompt" type="text" class="w-full"/>
+                                <input hlmInput id="prompt" type="text" class="w-full" formControlName="prompt"/>
                                 </label>
+                                <hlm-dialog-footer>
+                                    @if(!isLoading()){
+                                      <button hlmBtn type="submit" [disabled]="promptForm.invalid" (click)="generateContent(ctx)">Generate</button>
+                                    } @else {
+                                      <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
+                                    }
+                                  </hlm-dialog-footer>
                             </form>
                         </div>
-                        <hlm-dialog-footer>
-                          @if(!isLoading()){
-                            <button hlmBtn type="submit" [disabled]="false" (click)="generateContent(ctx)">Generate</button>
-                          } @else {
-                            <button disabled hlmBtn><hlm-icon name="lucideLoader2" size="sm" class="mr-2 animate-spin" /> Please wait</button>
-                          }
-                        </hlm-dialog-footer>
+                        
                       </hlm-dialog-content>
                 </hlm-dialog>  
             }   
