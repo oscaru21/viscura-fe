@@ -66,15 +66,14 @@ export class PhotosService {
     });
     this.delete$.pipe(
       takeUntilDestroyed(),
-      switchMap((photoIds) => this.http.delete<Photo['id'][]>(`${this.baseUrl}/events/${this.eventsService.currentEvent()}/photos`, { body: photoIds }))
-    ).subscribe((photoIds) => {
-      this.state.update((state) => ({
+      tap((photoIds: any[]) => this.state.update((state) => ({
         ...state,
         photos: state.photos.filter((photo) => !photoIds.includes(photo.id)),
         filteredPhotos: state.filteredPhotos.filter((photo) => !photoIds.includes(photo.id)),
         selectedPhotos: state.selectedPhotos.filter((photo) => !photoIds.includes(photo.id))
-      }));
-    });
+      }))),
+      switchMap((photoIds) => this.http.delete<Photo['id'][]>(`${this.baseUrl}/events/${this.eventsService.currentEvent()}/photos`, { body: photoIds }))
+    ).subscribe();
     this.select$.pipe(takeUntilDestroyed()).subscribe((photoId) => {
       this.state.update((state) => ({
         ...state,
@@ -123,13 +122,5 @@ export class PhotosService {
       first() as any,
       tap((ids) => this.filteredPhotosSubject$.next(ids))
     ) as Observable<number[]>;
-  }
-
-  clearSelection() {
-    this.state.update((state) => ({
-      ...state,
-      selectedPhotos: [],
-      isSelecting: false
-    }));
   }
 }

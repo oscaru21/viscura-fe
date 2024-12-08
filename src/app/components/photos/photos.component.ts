@@ -88,7 +88,7 @@ export class PhotosComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.photosService.clearSelection();
+    this.photosService.stopSelecting$.next(true);
   }
 
   onFileSelect(event: any) {
