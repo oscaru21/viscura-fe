@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { lucideLoader2, lucideSearch } from '@ng-icons/lucide';
 import { HlmCommandInputWrapperComponent } from '@spartan-ng/ui-command-helm';
@@ -55,7 +55,7 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './photos.component.html',
   styleUrl: './photos.component.scss'
 })
-export class PhotosComponent implements OnInit {
+export class PhotosComponent implements OnInit, OnDestroy {
   @ViewChild('uploadDialog') uploadDialog: TemplateRef<any> | undefined;
   photosService = inject(PhotosService);
   eventsService = inject(EventsService);
@@ -85,6 +85,10 @@ export class PhotosComponent implements OnInit {
     ).subscribe((query) => {
       this.photosService.semanticSearch(this.eventId, query as string).pipe(first()).subscribe();
     });
+  }
+
+  ngOnDestroy() {
+    this.photosService.clearSelection();
   }
 
   onFileSelect(event: any) {

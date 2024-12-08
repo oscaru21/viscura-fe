@@ -125,4 +125,11 @@ export class PhotosService {
     ) as Observable<number[]>;
   }
 
+  clearSelection() {
+    this.state.update((state) => ({
+      ...state,
+      selectedPhotos: [],
+      isSelecting: false
+    }));
+  }
 }
