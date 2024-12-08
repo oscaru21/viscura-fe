@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
 import { Post, PostRequest } from '../../models/post.model';
 import { of, Subject } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface PostsState {
   posts: Post[];
-  currentPost: string | null;
+  currentPost: Post | null;
   loaded: boolean;
   error: string | null;
 }
@@ -29,7 +29,6 @@ export class PostsService {
   // selectors
   posts = computed(() => this.postsState().posts);
   currentPost = computed(() => this.postsState().currentPost);
-  currentPostData = computed(() => this.postsState().posts.find(post => post.id === this.currentPost()));
   loaded = computed(() => this.postsState().loaded);
   error = computed(() => this.postsState().error);
 
@@ -52,15 +51,11 @@ export class PostsService {
       }))
     });
     this.changePost$.pipe(takeUntilDestroyed(),
-      tap(() => {
-        if(!this.loaded()){
-          this.getPosts().pipe(take(1)).subscribe();
-        }
-      })
-    ).subscribe((postId) => {
+      switchMap((postId) => this.getPost(postId))
+    ).subscribe((post) => {
       this.postsState.update((state) => ({
         ...state,
-        currentPost: postId
+        currentPost: post
       }));
     }
     );
@@ -72,13 +67,17 @@ export class PostsService {
     });
   }
 
-  getPosts() {
-    // ENDPOINT MISSING
-    // return this.http.get<Post[]>(`${this.baseUrl}/posts`, { params: { org_id: this.organizationId } })
-    return of([])
-    .pipe(
-      tap((posts) => this.postsLoadedSubject$.next(posts))
-    );
+  // getPosts() {
+  //   // ENDPOINT MISSING
+  //   // return this.http.get<Post[]>(`${this.baseUrl}/posts`, { params: { org_id: this.organizationId } })
+  //   return of([])
+  //   .pipe(
+  //     tap((posts) => this.postsLoadedSubject$.next(posts))
+  //   );
+  // }
+
+  getPost(postId: string) {
+    return this.http.get<Post>(`${this.baseUrl}/posts/${postId}`);
   }
 
   createPost(eventId: string, imageIds: number[]) {
@@ -103,5 +102,19 @@ export class PostsService {
 
   deletePost(postId: string) {
     return this.http.delete(`${this.baseUrl}/posts/${postId}`);
+  }
+
+  updatePostCaption(caption: string) {
+    const updatedPost = { 
+      caption,
+      event_id: this.currentPost()?.event_id,
+      image_ids: this.currentPost()?.image_ids,
+     };
+    const postId: number = parseInt(this.currentPost()?.id as string);
+    this.postsState.update((state) => ({
+      ...state,
+      currentPost: updatedPost
+    }));
+    return this.http.put(`${this.baseUrl}/posts/${postId}`, updatedPost);
   }
 }

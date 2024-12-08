@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PhotosService } from '../../services/photos.service';
 import { PostsService } from '../../services/posts/posts.service';
 import { CommonModule } from '@angular/common';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-post',
@@ -29,14 +30,18 @@ export class PostComponent {
   photosService = inject(PhotosService);
   postService = inject(PostsService);
 
-  post = this.postService.currentPostData;
-  images = computed(() => this.photosService.selectedPhotos().map(photo => photo.url));
+  post = this.postService.currentPost;
+  images = computed(() => {
+    const postImageIds = this.post()?.image_ids;
+    return postImageIds ? this.photosService.photos().filter(photo => postImageIds.includes(photo.id)).map(photo => photo.url) : [];
+  });
 
   constructor() { 
     this.activeRoute.params.pipe(takeUntilDestroyed()).subscribe(params => {
       const { eventId, postId } = params;
       this.eventsService.changeEvent$.next(eventId);
       this.postService.changePost$.next(postId);
+      this.photosService.getPhotos(eventId).pipe(first()).subscribe();
     });
   }
 }

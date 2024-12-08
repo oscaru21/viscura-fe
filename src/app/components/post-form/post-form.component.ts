@@ -18,6 +18,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { PostsService } from '../../services/posts/posts.service';
 import { AuthService } from '../../auth/auth.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-post-form',
@@ -74,7 +75,7 @@ export class PostFormComponent {
   isLoading = signal(false);
   isEditing = signal(false);
 
-  content = signal('');
+  content = computed(() => this.postService.currentPost()?.caption);
   feedbacks = this.feedbackService.feedbacks;
 
   feedbackForm = new FormGroup({
@@ -96,15 +97,14 @@ export class PostFormComponent {
       tone: 'friendly',
       max_tokens: 100,
     };
-    this.http.post(`http://localhost:8000/posts/${this.postService.currentPost()}/generate`, requestBody).subscribe((res: any) => {
-      this.content.set(res['caption']);
-      ctx.close();
-      this.isLoading.set(false);
-    });
-  }
-
-  updateContent(text: string) {
-    this.content.set(text);
+    if (this.postService.currentPost()?.id) {
+      this.http.post(`http://localhost:8000/posts/${parseInt(this.postService.currentPost()?.id as string)}/generate`, requestBody).pipe(
+        switchMap((res: any) => this.postService.updatePostCaption(res['caption']))
+      ).subscribe((res: any) => {
+        ctx.close();
+        this.isLoading.set(false);
+      });
+    }
   }
 
   toggleEditing() {

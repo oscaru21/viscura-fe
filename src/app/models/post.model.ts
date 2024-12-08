@@ -1,7 +1,8 @@
 export interface Post {
-    id: string;
-    caption: string;
-    image_ids: number[];
+    id?: string;
+    caption?: string;
+    image_ids?: number[];
+    event_id?: number;
 }
 
 export interface PostRequest {
