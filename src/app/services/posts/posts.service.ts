@@ -67,14 +67,11 @@ export class PostsService {
     });
   }
 
-  // getPosts() {
-  //   // ENDPOINT MISSING
-  //   // return this.http.get<Post[]>(`${this.baseUrl}/posts`, { params: { org_id: this.organizationId } })
-  //   return of([])
-  //   .pipe(
-  //     tap((posts) => this.postsLoadedSubject$.next(posts))
-  //   );
-  // }
+  getPosts(eventId: string) {
+    return this.http.get<Post[]>(`${this.baseUrl}/events/${eventId}/posts`).pipe(
+      tap((posts) => this.postsLoadedSubject$.next(posts))
+    )
+  }
 
   getPost(postId: string) {
     return this.http.get<Post>(`${this.baseUrl}/posts/${postId}`);

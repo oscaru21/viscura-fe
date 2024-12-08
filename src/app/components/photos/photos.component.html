@@ -37,6 +37,9 @@
               </hlm-dialog-content>
         </hlm-dialog>
         }
+        @if(authService.user()?.role?.includes('content manager')) {
+          <button hlmBtn (click)="redirectToPosts()">Posts</button>
+        }
       </div>
     @if(isSelecting()) {
       <div class="py-4 bg-background w-full sticky top-0 z-50">

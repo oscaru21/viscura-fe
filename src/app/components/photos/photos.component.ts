@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogService, HlmDialogTitleDirective } from '@spartan-ng/ui-dialog-helm';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventsService } from '../../services/events/events.service';
 import { PhotosActionsComponent } from '../photos-actions/photos-actions.component';
 import { EmptyComponent } from '../empty/empty.component';
@@ -62,6 +62,7 @@ export class PhotosComponent implements OnInit, OnDestroy {
   activeRoute = inject(ActivatedRoute);
   dialogService = inject(HlmDialogService);
   authService = inject(AuthService);
+  router = inject(Router);
 
   isSelecting = this.photosService.isSelecting;
   isUploading = signal(false);
@@ -111,5 +112,8 @@ export class PhotosComponent implements OnInit, OnDestroy {
   }
   onFilterChange(event: any) {
     this.filterBlurryPhotos = event;
+  }
+  redirectToPosts() {
+    this.router.navigate(['/events', this.eventId, 'posts']);
   }
 }

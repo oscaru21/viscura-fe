@@ -10,6 +10,10 @@ export const routes: Routes = [
         path: 'events/:eventId/photos', 
         canActivate: [isAuthenticatedGuard()], 
         loadComponent: () => import('./components/photos/photos.component').then(m => m.PhotosComponent)},
+    {
+        path: 'events/:eventId/posts',
+        canActivate: [isAuthenticatedGuard(), isCMroleGuard()],
+        loadComponent: () => import('./components/posts/posts.component').then(m => m.PostsComponent) },
     { 
         path: 'events/:eventId/posts/:postId', 
         canActivate: [isAuthenticatedGuard(), isCMroleGuard()],
@@ -17,7 +21,7 @@ export const routes: Routes = [
     { 
         path: 'events', 
         canActivate: [isAuthenticatedGuard()],
-        loadComponent: () => import('./components/events/events.component').then(m => m.EventsComponent) },
+        loadComponent: () => import('./components/events/events.component').then(m => m.EventsComponent) },  
     {
         path: '',
         redirectTo: 'auth',
